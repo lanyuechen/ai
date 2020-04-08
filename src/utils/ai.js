@@ -13,6 +13,7 @@ export default class Ai {
       return [ this.validate(state) ];
     }
 
+    let pos;
     if (role) {
       for (let i = 0; i < candidates.length; i++) {
         const [x, y] = candidates[i];
@@ -32,12 +33,13 @@ export default class Ai {
         state.remove(x, y);
         if (point > alpha) {
           alpha = point;
+          pos = [x, y];
         }
         if (alpha > beta) {
           return [ alpha, [x, y]];
         }
       }
-      return [ alpha, candidates[candidates.length - 1] ];
+      return [ alpha, pos ];
     }
 
     for (let i = 0; i < candidates.length; i++) {
@@ -58,12 +60,13 @@ export default class Ai {
       state.remove(x, y);
       if (point < beta) {
         beta = point;
+        pos = [x, y];
       }
       if (alpha > beta) {
         return [ beta, [x, y]];
       }
     }
-    return [ beta, candidates[candidates.length - 1] ];
+    return [ beta, pos ];
   }
 
   /**
@@ -89,9 +92,9 @@ export default class Ai {
       for (let j = 0; j < state.board[i].length; j++) {
         const d = state.board[i][j];
         if (d === 1) {
-          count -= (i + j);
-        } else if (d === 2) {
           count += (i + j);
+        } else if (d === 2) {
+          count -= (i + j);
         }
       }
     }

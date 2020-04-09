@@ -55,7 +55,7 @@ export default class Board {
   }
 
   canPut(x, y) {
-    return this.board[x][y] !== Board.BLACK && this.board[x][y] !== Board.WHITE;
+    return this.board[x] && (this.board[x][y] === Board.EMPTY || this.board[x][y] === Board.CANDIDATE);
   }
 
   remove(x, y) {

@@ -12,8 +12,8 @@ export default function() {
   const [ rand, setRand ] = useState(0);
 
   const aiPut = () => {
-    const [ point, [x, y] ] = ai.calc(1);
-    console.log('[ai put]', x, y);
+    const [ point, [x, y] ] = ai.calc(2);
+    console.log('[ai put]', x, y, point);
     ai.board.putA(x, y);
     setRand(Math.random());
   }

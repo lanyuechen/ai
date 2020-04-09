@@ -1,3 +1,5 @@
+import validate from './validate';
+
 export default class Ai {
   constructor(board) {
     this.board = board;
@@ -26,7 +28,7 @@ export default class Ai {
   minimax(state, deep, role = 1, alpha = -Infinity, beta = Infinity) {
     const candidates = state.getCandidates();
     if (!candidates || deep <= 0) {
-      return [ this.validate(state) ];
+      return [ validate(state) ];
     }
 
     let pos;
@@ -67,22 +69,5 @@ export default class Ai {
       }
     }
     return [ beta, pos ];
-  }
-
-  // 白棋，获取尽可能小的值
-  validate(state) {
-    let count = 0;
-    for (let i = 0; i < state.board.length; i++) {
-      for (let j = 0; j < state.board[i].length; j++) {
-        const d = state.board[i][j];
-        if (d === 1) {
-          count += (i + j);
-        } else if (d === 2) {
-          count -= (i + j);
-        }
-      }
-    }
-
-    return count;
   }
 }

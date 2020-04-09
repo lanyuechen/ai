@@ -1,8 +1,8 @@
 .board {
   background: lightgray;
   overflow: hidden;
-  width: 225px;
-  height: 225px;
+  width: 240px;
+  height: 240px;
 }
 
 .row {

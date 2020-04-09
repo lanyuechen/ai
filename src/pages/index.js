@@ -42,8 +42,17 @@ export default function() {
     <div >
       <button onClick={aiPut}>开始</button>
       <div className={style.board}>
+        <div className={style.row}>
+          <div className={style.col}></div>
+          {board[0].map(((d, j) => (
+            <div key={j} className={style.col}>{j}</div>
+          )))}
+        </div>
         {board.map((row, i) => (
           <div className={style.row} key={i}>
+            <div className={style.col}>
+              {i}
+            </div>
             {row.map((col, j) => (
               <div 
                 key={j}

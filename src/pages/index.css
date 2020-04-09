@@ -1,23 +1,29 @@
-
-.normal {
-  font-family: Georgia, sans-serif;
-  margin-top: 4em;
-  text-align: center;
+.board {
+  background: lightgray;
+  overflow: hidden;
+  width: 225px;
+  height: 225px;
 }
 
-.welcome {
-  height: 512px;
-  background: url(../assets/yay.jpg) no-repeat center 0;
-  background-size: 512px 512px;
+.row {
+  
 }
 
-.list {
-  font-size: 1.2em;
-  margin: 1.8em 0 0;
-  list-style: none;
-  line-height: 1.5em;
+.col {
+  float: left;
+  width: 15px;
+  height: 15px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 50%;
 }
 
-.list code {
-  background: #f7f7f7;
+.col[data-type=col-1] {
+  background: #000;
+}
+.col[data-type=col-2] {
+  background: #fff;
+}
+.col[data-type=col-3] {
+  background: lightblue;
 }

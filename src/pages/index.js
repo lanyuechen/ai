@@ -12,7 +12,12 @@ export default function() {
   const [ rand, setRand ] = useState(0);
 
   const aiPut = () => {
-    const [ point, [x, y] ] = ai.calc(2);
+    const [ point, pos ] = ai.calc(2);
+    if (!pos) {
+      alert('机器人认输了！');
+      return;
+    }
+    const [ x, y ] = pos;
     console.log('[ai put]', x, y, point);
     ai.board.putA(x, y);
     setRand(Math.random());

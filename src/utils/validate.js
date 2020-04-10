@@ -60,7 +60,7 @@ function ratingSearch(state, i, j, role) {
   if (board[i][j - 1] !== Board.role) {
     let r = 0;
     while(board[i][j + r] === role) r++;
-    if (r === 5) {
+    if (r >= 5) {
       return sign * Infinity;
     }
     const s = state.canPut(i, j - 1);
@@ -76,7 +76,7 @@ function ratingSearch(state, i, j, role) {
   if (!board[i -1] || board[i - 1][j] !== role) {
     let b = 0;
     while(board[i + b] && board[i + b][j] === role) b++;
-    if (b === 5) {
+    if (b >= 5) {
       return  sign * Infinity;
     }
     const s = state.canPut(i - 1, j);
@@ -92,7 +92,7 @@ function ratingSearch(state, i, j, role) {
   if (!board[i - 1] || board[i - 1][j - 1] !== role) {
     let rb = 0;
     while(board[i + rb] && board[i + rb][j + rb] === role) rb++;
-    if (rb === 5) {
+    if (rb >= 5) {
       return sign * Infinity;
     }
     const s = state.canPut(i - 1, j - 1);
@@ -108,7 +108,7 @@ function ratingSearch(state, i, j, role) {
   if (!board[i + 1] || board[i + 1][j - 1] !== role) {
     let ru = 0;
     while(board[i - ru] && board[i - ru][j + ru] === role) ru++;
-    if (ru === 5) {
+    if (ru >= 5) {
       return sign * Infinity;
     }
     const s = state.canPut(i + 1, j - 1);

@@ -43,18 +43,27 @@ export default function() {
     setRand(Math.random());
   }
 
+  const refresh = () => {
+    ai.board.clear();
+    setRand(Math.random());
+  }
+
   window.board = ai.board;
   const board = ai.board.board;
 
+  const width = window.innerWidth < 420 ? window.innerWidth - 20 : 420;
+
   return (
-    <div className={style.container}>
+    <div className={style.container} style={{width: width + 20}}>
+      <h2 className={style.title}>AI五子棋 v1.0</h2>
       <BoardView
-        width={400}
+        width={width}
         data={board} 
         onClick={userPut}
       />
       <div className={style.toolbar}>
-        <div>
+        <div className={style.user}>
+          <div className={style.icon} style={{float: 'left'}}>🤖️</div>
           <div 
             className={boardStyle.chess} 
             data-type="black"
@@ -64,8 +73,13 @@ export default function() {
             }}
           />
         </div>
-        <button className={style.btn} onClick={aiPut}>开始</button>
         <div>
+          <button className={style.btn} onClick={aiPut}>开始</button>
+          &nbsp;&nbsp;
+          <button className={style.btn} onClick={refresh}>重来</button>
+        </div>
+        <div className={style.user}>
+          <div className={style.icon} style={{float: 'right'}}>😳</div>
           <div 
             className={boardStyle.chess} 
             data-type="white"

@@ -72,4 +72,10 @@ export default class Board {
     }
     return this.candidates.flat().filter(([x, y]) => this.canPut(x, y));
   }
+
+  clear() {
+    this.candidates = [];                 // 备选落子位置
+    this.board = this.initBoard(this.N);  // 棋盘
+    this.stack = [];                      // 落子状态
+  }
 }

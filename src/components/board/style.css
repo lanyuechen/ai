@@ -4,7 +4,6 @@
   box-sizing: border-box;
   background: url(@/assets/wood.jpg);
   background-size: cover;
-  font-family: arial;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -17,6 +16,7 @@
 }
 
 .rowNo, .colNo {
+  pointer-events: none;
   position: absolute;
   display: flex;
   justify-content: space-around;

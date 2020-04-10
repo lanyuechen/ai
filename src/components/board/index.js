@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import style from './style.css';
 
@@ -8,10 +8,6 @@ function chessType(n) {
 
 export default function (props) {
   const { width = 300, data, onClick } = props;
-
-  useEffect(() => {
-    
-  }, []);
 
   const unit = 100 / (data.length - 1);
   const contentWidth = 100 / (100 + 2 * unit) * 100;

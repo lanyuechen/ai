@@ -9,14 +9,14 @@ export default class Ai {
   calc(deep) {
     this.table = [];
     const res = this.minimax(this.board, deep);
-    // console.table(this.table);
+    console.table(this.table);
     return res;
   }
 
   log(type, state, deep, alpha, beta, point, position) {
     this.table.push({
       type,
-      state: state.board.toString(),
+      state: state.stack.slice(type === 'max' ? -1 : -2).map(d => d.toString()).join('|'),
       deep,
       alpha,
       beta,

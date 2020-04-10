@@ -40,7 +40,20 @@ export default function() {
 
   return (
     <div >
-      <button onClick={aiPut}>开始</button>
+      <div>
+        <button onClick={aiPut}>开始</button>
+      </div>
+      <pre>
+        {`
+const LIVE_4        = 1000000;
+const DOUBLE_LIVE_3 = 100000;
+const LIVE_3        = 10000;
+const LIVE_2        = 1000;
+const SLEEP_4       = 1000;
+const SLEEP_3       = 100;
+const SLEEP_2       = 10;
+        `}
+      </pre>
       <div className={style.board}>
         <div className={style.row}>
           <div className={style.col}></div>

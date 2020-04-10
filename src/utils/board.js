@@ -7,7 +7,7 @@ export default class Board {
 
   constructor(conf = { n: 15 }) {
     this.N = conf.n;                      // 棋盘大小
-    this.R = 3;                           // 有效落子位置半径，距离某棋子超过该距离被认定为无效落子
+    this.R = 2;                           // 有效落子位置半径，距离某棋子超过该距离被认定为无效落子
     this.candidates = [];                 // 备选落子位置
     this.board = this.initBoard(this.N);  // 棋盘
     this.stack = [];                      // 落子状态

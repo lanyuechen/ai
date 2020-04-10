@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 import AI from '@/utils/ai';
 import Board from '@/utils/board';
 
+import BoardView from '@/components/board';
+
 import style from './index.css';
+import boardStyle from '@/components/board/style.css';
 
 const board = new Board({ n: 15});
 const ai = new AI(board);
@@ -23,7 +26,7 @@ export default function() {
     setRand(Math.random());
   }
 
-  const userPut = (e, x, y) => {
+  const userPut = (x, y, e) => {
     if (e.metaKey) {
       remove(x, y);
       return;
@@ -44,45 +47,34 @@ export default function() {
   const board = ai.board.board;
 
   return (
-    <div >
-      <div>
-        <button onClick={aiPut}>开始</button>
-      </div>
-      <pre>
-        {`
-const LIVE_4        = 1000000;
-const DOUBLE_LIVE_3 = 100000;
-const LIVE_3        = 10000;
-const LIVE_2        = 1000;
-const SLEEP_4       = 1000;
-const SLEEP_3       = 100;
-const SLEEP_2       = 10;
-        `}
-      </pre>
-      <div className={style.board}>
-        <div className={style.row}>
-          <div className={style.col}></div>
-          {board[0].map(((d, j) => (
-            <div key={j} className={style.col}>{j}</div>
-          )))}
+    <div className={style.container}>
+      <BoardView
+        width={400}
+        data={board} 
+        onClick={userPut}
+      />
+      <div className={style.toolbar}>
+        <div>
+          <div 
+            className={boardStyle.chess} 
+            data-type="black"
+            style={{
+              width: 20,
+              height: 20
+            }}
+          />
         </div>
-        {board.map((row, i) => (
-          <div className={style.row} key={i}>
-            <div className={style.col}>
-              {i}
-            </div>
-            {row.map((col, j) => (
-              <div 
-                key={j}
-                onClick={(e) => userPut(e, i, j)} 
-                className={style.col}
-                data-type={`col-${col}`}
-              >
-                {col}
-              </div>
-            ))}
-          </div>
-        ))}
+        <button className={style.btn} onClick={aiPut}>开始</button>
+        <div>
+          <div 
+            className={boardStyle.chess} 
+            data-type="white"
+            style={{
+              width: 20,
+              height: 20
+            }} 
+          />
+        </div>
       </div>
     </div>
   );

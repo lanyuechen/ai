@@ -1,0 +1,89 @@
+.container {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: url(@/assets/wood.jpg);
+  background-size: cover;
+  font-family: arial;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.grid {
+  pointer-events: none;
+  position: absolute;
+  background-image: linear-gradient(#000 1px, transparent 0), linear-gradient(90deg, #000 1px, transparent 0);
+  background-position: -0.5px -0.5px;
+  border: 1px solid #000;
+}
+
+.rowNo, .colNo {
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  font-size: 12px;
+  color: #111;
+}
+.rowNo > div, .colNo > div {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rowNo {
+  flex-direction: column;
+}
+
+.board {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.row {
+  display: flex;
+  justify-content: stretch;
+  height: 100%;
+}
+
+.chess {
+  overflow: hidden;
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding: 2px;
+  cursor: pointer;
+  text-indent: 999px;
+}
+
+/* 棋子 */
+.chess[data-type='black'], .chess[data-type='white'] {
+  box-shadow: .01rem .01rem .1rem rgba(0, 0, 0, .5), 0 0 .05rem rgba(240, 240, 240, .5), .05rem .05rem .01rem rgba(255, 255, 255, .15) inset, .1rem .1rem .1rem rgba(255, 255, 255, .05) inset, -.05rem -.05rem .25rem rgba(0, 0, 0, .15) inset, -.1rem -.1rem .35rem rgba(0, 0, 0, .05) inset;   
+  transform: scale(0.9);
+}
+
+/* 黑棋 */
+.chess[data-type='black'] {
+  background: #111;
+}
+/* 白棋 */
+.chess[data-type='white'] {
+  background: #EEE;  
+}
+/* 备选 */
+.chess[data-type=candidate] {
+  background: rgba(0, 0, 0, 0.1);
+}
+/* 空白 */
+.chess[data-type=empty] {
+  background: transparent;
+}
+

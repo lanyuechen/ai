@@ -2,6 +2,9 @@
 // ref: https://umijs.org/config/
 export default {
   treeShaking: true,
+  history: 'hash',
+  hash: true,
+  publicPath: '/ai/',
   routes: [
     {
       path: '/',

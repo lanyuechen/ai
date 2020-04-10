@@ -17,7 +17,7 @@ export default {
       antd: false,
       dva: false,
       dynamicImport: false,
-      title: 'ai',
+      title: 'AI五子棋',
       dll: false,
       
       routes: {

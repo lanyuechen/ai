@@ -51,13 +51,13 @@ export default function() {
   window.board = ai.board;
   const board = ai.board.board;
 
-  const width = window.innerWidth < 420 ? window.innerWidth - 20 : 420;
+  const scale = window.innerWidth < 500 ? window.innerWidth / 500 : 1;
 
   return (
-    <div className={style.container} style={{width: width + 20}}>
+    <div className={style.container} style={{transform: `scale(${scale})`}}>
       <h2 className={style.title}>AI五子棋 v1.0</h2>
       <BoardView
-        width={width}
+        width={480}
         data={board} 
         onClick={userPut}
       />

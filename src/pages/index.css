@@ -6,8 +6,9 @@ body {
 
 .container {
   box-sizing: border-box;
-  width: 420px;
+  width: 500px;
   padding: 10px;
+  transform-origin: 0 0;
 }
 
 .title {

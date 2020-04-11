@@ -9,7 +9,7 @@ import { wait } from '@/utils/common';
 import style from './index.css';
 import boardStyle from '@/components/board/style.css';
 
-const SEARCH_DEEP = 4;
+const SEARCH_DEEP = 2;
 
 let table = [];
 
@@ -28,19 +28,19 @@ const log = (state, deep, role, alpha, beta, point) => {
 }
 
 export default function() {
-  const [ rand, setRand ] = useState(0);
+  const [ current, setCurrent ] = useState();
   const enhance = (next) => async (...args) => {
     // await wait(500);
     const res = await next(...args);
-    log(...args, res[0]);
+    // log(...args, res[0]);
     return res;
   };
   const ai = useMemo(() => new AI(new Board({n: 15}), enhance), []);
 
   const aiPut = async () => {
-    table = [];
+    // table = [];
     const [ point, pos ] = await ai.calc(SEARCH_DEEP);
-    console.table(table);
+    // console.table(table);
 
     if (!pos) {
       alert('AI被难住了！');
@@ -49,33 +49,30 @@ export default function() {
     const [ x, y ] = pos;
     console.log('[ai put]', x, y, point);
     ai.board.putA(x, y);
+    setCurrent([x, y]);
     judge();
-    setRand(Math.random());
   }
 
   const userPut = (x, y) => {
     console.log('[user put]', x, y);
     if (ai.board.putB(x, y)) {
+      setCurrent([x, y]);
       if (!judge()) {
         setTimeout(() => {
           aiPut();
         }, 0);
       }
-      setRand(Math.random());
     }
   }
 
   const userPutByAI = () => {
-    const [ point, pos ] = ai.calc(SEARCH_DEEP, 0);
+    const [ , pos ] = ai.calc(SEARCH_DEEP, 0);
     if (!pos) {
       alert('AI也不知道该往哪走了...');
       return;
     }
     const [ x, y ] = pos;
-    console.log('[user put by ai]', x, y, point);
-    ai.board.putB(x, y);
-    judge();
-    setRand(Math.random());
+    userPut(x, y);
   }
 
   const judge = () => {
@@ -95,13 +92,11 @@ export default function() {
 
   const refresh = () => {
     ai.board.clear();
-    setRand(Math.random());
+    setCurrent();
   }
 
   const retract = () => {
-    ai.board.remove();
-    ai.board.remove();
-    setRand(Math.random());
+    setCurrent(ai.board.remove());
   }
 
   window.board = ai.board;
@@ -115,6 +110,7 @@ export default function() {
       <BoardView
         width={480}
         data={board} 
+        current={current}
         onClick={userPut}
       />
       <div className={style.toolbar}>

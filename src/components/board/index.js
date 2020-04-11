@@ -7,7 +7,7 @@ function chessType(n) {
 }
 
 export default function (props) {
-  const { width = 300, data, onClick } = props;
+  const { width = 300, data, current = [], onClick } = props;
 
   const unit = 100 / (data.length - 1);
   const contentWidth = 100 / (100 + 2 * unit) * 100;
@@ -65,6 +65,7 @@ export default function (props) {
                 key={j} 
                 className={style.chess}
                 data-type={chessType(col)}
+                data-active={current[0] === i && current[1] === j}
                 onClick={(e) => onClick(i, j, e)}
               >
                 {col}

@@ -1,11 +1,10 @@
 import Board from "./board";
 
 const LIVE_4        = 1000000;
-const DOUBLE_LIVE_3 = 100000;
-const LIVE_3        = 10000;
+const LIVE_3        = 100000;
 const LIVE_2        = 1000;
-const SLEEP_4       = 1000;
-const SLEEP_3       = 100;
+const SLEEP_4       = 100000;
+const SLEEP_3       = 1000;
 const SLEEP_2       = 10;
 
 const SEARCH_DIRECTIONS = [
@@ -21,10 +20,8 @@ export default function(state) {
 
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {
-      if (board[i][j] === Board.BLACK) {  // 搜索
-        point += ratingSearch(state, i, j, Board.BLACK);
-      } else if (board[i][j] === Board.WHITE) {
-        point += ratingSearch(state, i, j, Board.WHITE);
+      if (board[i][j] === Board.BLACK || board[i][j] === Board.WHITE) {  // 搜索
+        point += ratingSearch(state, i, j);
       }
     }
   }
@@ -32,11 +29,11 @@ export default function(state) {
   return point;
 }
 
-function ratingSearch(state, i, j, role) {
+function ratingSearch(state, i, j) {
   let point = 0;
-  const sign = role === Board.BLACK ? 1 : -1;
+  const sign = state.board[i][j] === Board.BLACK ? 1 : -1;
   for (let fn of SEARCH_DIRECTIONS) {
-    point += search(state, i, j, role, fn);
+    point += search(state, i, j, fn);
     if (!Number.isFinite(point)) {
       return Infinity * sign;
     }
@@ -45,8 +42,9 @@ function ratingSearch(state, i, j, role) {
   return point * sign;
 }
 
-function search(state, i, j, role, step) {
+function search(state, i, j, step) {
   const board = state.board;
+  const role = board[i][j];
   const [li, lj] = step(i, j, -1);  // 前置位置
   if (board[li] && board[li][lj] === role) {
     return 0;

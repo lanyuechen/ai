@@ -66,6 +66,7 @@ export default class Board {
       this.board[pos[0]][pos[1]] = Board.CANDIDATE;
       this.popCandidates();
     }
+    return pos;
   }
 
   getCandidates() {

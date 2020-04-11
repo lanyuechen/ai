@@ -3,17 +3,19 @@ import validate from './validate';
 export default class Ai {
   constructor(board) {
     this.board = board;
-    this.table = [];
   }
 
-  calc(deep) {
-    this.table = [];
-    const res = this.minimax(this.board, deep);
-    console.table(this.table);
+  calc(deep, role = 1) {
+    // this.table = [];
+    const res = this.minimax(this.board, deep, role);
+    // console.table(this.table);
     return res;
   }
 
   log(type, state, deep, alpha, beta, point, position) {
+    if (!this.table) {
+      return;
+    }
     this.table.push({
       type,
       state: state.stack.slice(type === 'max' ? -1 : -2).map(d => d.toString()).join('|'),
@@ -28,10 +30,10 @@ export default class Ai {
   minimax(state, deep, role = 1, alpha = -Infinity, beta = Infinity) {
     const candidates = state.getCandidates();
     if (!candidates || deep <= 0) {
-      return [ validate(state) ];
+      return [ validate(state), candidates[0] ];
     }
 
-    let pos;
+    let pos = candidates[0];
     if (role) {
       for (let i = 0; i < candidates.length; i++) {
         const [x, y] = candidates[i];
@@ -40,7 +42,7 @@ export default class Ai {
         
         this.log('max', state, deep, alpha, beta, point, `${x}, ${y}`);
 
-        state.remove(x, y);
+        state.remove();
         if (point > alpha) {
           alpha = point;
           pos = [x, y];

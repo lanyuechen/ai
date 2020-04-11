@@ -1,3 +1,4 @@
+import validate from './validate';
 
 export default class Board {
   static EMPTY = 0;       // 空
@@ -38,30 +39,33 @@ export default class Board {
   }
 
   putA(x, y) {
-    this.put(x, y, Board.BLACK);
+    return this.put(x, y, Board.BLACK);
   }
 
   putB(x, y) {
-    this.put(x, y, Board.WHITE);
+    return this.put(x, y, Board.WHITE);
   }
 
   put(x, y, role) {
     if (!this.canPut(x, y)) {
-      return;
+      return false;
     }
     this.board[x][y] = role; // 1: 黑棋， 2：白棋
     this.stack.push([x, y]);
     this.updateCandidates(x, y);
+    return true;
   }
 
   canPut(x, y) {
     return this.board[x] && (this.board[x][y] === Board.EMPTY || this.board[x][y] === Board.CANDIDATE);
   }
 
-  remove(x, y) {
-    this.board[x][y] = Board.CANDIDATE;
-    this.stack.pop();
-    this.popCandidates();
+  remove() {
+    const pos = this.stack.pop();
+    if (pos) {
+      this.board[pos[0]][pos[1]] = Board.CANDIDATE;
+      this.popCandidates();
+    }
   }
 
   getCandidates() {
@@ -71,6 +75,20 @@ export default class Board {
       ];
     }
     return this.candidates.flat().filter(([x, y]) => this.canPut(x, y));
+  }
+
+  /**
+   * 胜负判定
+   * @return {boolean} true: 黑胜，false: 白胜
+   */
+  judge() {
+    const val = validate(this);
+    if (val === Infinity) {
+      return Board.BLACK;
+    } else if (val === -Infinity) {
+      return Board.WHITE;
+    }
+    return 0;
   }
 
   clear() {

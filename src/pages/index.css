@@ -10,6 +10,7 @@ body {
   width: 500px;
   padding: 10px;
   transform-origin: 0 0;
+  margin: auto;
 }
 
 .title {
@@ -70,4 +71,20 @@ body {
 @keyframes run {
   from {left: 100vw;}
   to {left: -100vw}
+}
+
+.footer {
+  position: absolute;
+  text-align: center;
+  font-size: 12px;
+  opacity: .5;
+  color: #fff;
+  width: 100%;
+  top: 100vw;
+}
+
+.footer a {
+  color: inherit;
+  position: relative;
+  top: -10px;
 }

@@ -1,33 +1,22 @@
 import validate from './validate';
 
 export default class Ai {
-  constructor(board) {
+  constructor(board, enhance) {
     this.board = board;
+    if (enhance) {
+      this.minimax = enhance(this.minimax.bind(this));
+    }
   }
 
-  calc(deep, role = 1) {
-    // this.table = [];
-    const res = this.minimax(this.board, deep, role);
-    // console.table(this.table);
+  async calc(deep, role = 1) {
+    this.attempts = 0;
+    const res = await this.minimax(this.board, deep, role);
+    console.log('[minimax attempts]', this.attempts);
     return res;
   }
 
-  log(type, state, deep, alpha, beta, point, position) {
-    if (!this.table) {
-      return;
-    }
-    this.table.push({
-      type,
-      state: state.stack.slice(type === 'max' ? -1 : -2).map(d => d.toString()).join('|'),
-      deep,
-      alpha,
-      beta,
-      point,
-      position
-    });
-  }
-
-  minimax(state, deep, role = 1, alpha = -Infinity, beta = Infinity) {
+  async minimax(state, deep, role = 1, alpha = -Infinity, beta = Infinity) {
+    this.attempts += 1;
     const candidates = state.getCandidates();
     if (!candidates || deep <= 0) {
       return [ validate(state), candidates[0] ];
@@ -38,16 +27,13 @@ export default class Ai {
       for (let i = 0; i < candidates.length; i++) {
         const [x, y] = candidates[i];
         state.putA(x, y); // 黑棋
-        const [ point ] = this.minimax(state, deep - 1, role ^ 1, alpha, beta);
-        
-        this.log('max', state, deep, alpha, beta, point, `${x}, ${y}`);
-
+        const [ point ] = await this.minimax(state, deep - 1, role ^ 1, alpha, beta);
         state.remove();
         if (point > alpha) {
           alpha = point;
           pos = [x, y];
         }
-        if (alpha > beta) {
+        if (alpha >= beta) {
           return [ alpha, [x, y]];
         }
       }
@@ -57,16 +43,13 @@ export default class Ai {
     for (let i = 0; i < candidates.length; i++) {
       const [x, y] = candidates[i];
       state.putB(x, y); // 白棋
-      const [ point ] = this.minimax(state, deep - 1, role ^ 1, alpha, beta);
-      
-      this.log('min', state, deep, alpha, beta, point, `${x}, ${y}`);
-
+      const [ point ] = await this.minimax(state, deep - 1, role ^ 1, alpha, beta);
       state.remove(x, y);
       if (point < beta) {
         beta = point;
         pos = [x, y];
       }
-      if (alpha > beta) {
+      if (alpha >= beta) {
         return [ beta, [x, y]];
       }
     }

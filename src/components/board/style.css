@@ -72,7 +72,7 @@
 
 /* 黑棋 */
 .chess[data-type='black'] {
-  background: #111;
+  background: #222;
 }
 /* 白棋 */
 .chess[data-type='white'] {

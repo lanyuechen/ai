@@ -1,22 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 import AI from '@/utils/ai';
 import Board from '@/utils/board';
 
 import BoardView from '@/components/board';
+import { wait } from '@/utils/common';
 
 import style from './index.css';
 import boardStyle from '@/components/board/style.css';
 
-const board = new Board({ n: 15});
-const ai = new AI(board);
-const SEARCH_DEEP = 2;
+const SEARCH_DEEP = 4;
+
+let table = [];
+
+const log = (state, deep, role, alpha, beta, point) => {
+  if (!table) {
+    return;
+  }
+  table.push({
+    state: state.stack.slice(role === 0 ? -1 : -2).map(d => d.toString()).join('|'),
+    deep,
+    role: role === 0 ? 'max' : 'min',
+    alpha,
+    beta,
+    point,
+  });
+}
 
 export default function() {
   const [ rand, setRand ] = useState(0);
+  const enhance = (next) => async (...args) => {
+    // await wait(500);
+    const res = await next(...args);
+    log(...args, res[0]);
+    return res;
+  };
+  const ai = useMemo(() => new AI(new Board({n: 15}), enhance), []);
 
-  const aiPut = () => {
-    const [ point, pos ] = ai.calc(SEARCH_DEEP);
+  const aiPut = async () => {
+    table = [];
+    const [ point, pos ] = await ai.calc(SEARCH_DEEP);
+    console.table(table);
+
     if (!pos) {
       alert('AI被难住了！');
       return;
@@ -32,7 +57,9 @@ export default function() {
     console.log('[user put]', x, y);
     if (ai.board.putB(x, y)) {
       if (!judge()) {
-        aiPut();
+        setTimeout(() => {
+          aiPut();
+        }, 0);
       }
       setRand(Math.random());
     }
@@ -134,6 +161,11 @@ export default function() {
       {/* <div className={style.dogs}>
         恭喜你！
       </div> */}
+      <div className={style.footer}>
+        <a href="https://github.com/lanyuechen/ai">
+          lanyuechen's GitHub
+        </a>
+      </div>
     </div>
   );
 }

@@ -80,11 +80,11 @@ body {
   opacity: .5;
   color: #fff;
   width: 100%;
-  top: 100vw;
+  top: 100vh;
 }
 
 .footer a {
   color: inherit;
   position: relative;
-  top: -10px;
+  top: -20px;
 }

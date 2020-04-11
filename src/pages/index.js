@@ -106,7 +106,7 @@ export default function() {
 
   return (
     <div className={style.container} style={{transform: `scale(${scale})`}}>
-      <h2 className={style.title}>AI五子棋 v1.1</h2>
+      <h2 className={style.title}>AI五子棋 v1.2</h2>
       <BoardView
         width={480}
         data={board} 

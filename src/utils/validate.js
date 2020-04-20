@@ -2,7 +2,6 @@ const WEIGHT_1 = 1000000;
 const WEIGHT_2 = 100000;
 const WEIGHT_3 = 10000;
 const WEIGHT_4 = 1000;
-const WEIGHT_5 = 100;
 
 export default function(state) {
   const mask = extract(state);
@@ -29,24 +28,24 @@ export default function(state) {
 
   const aLiveThree = mask.match(/[03]111[03]/g); // 活三
   if (aLiveThree) { // 黑活三胜
-    return WEIGHT_3;
+    return WEIGHT_1;
   }
 
   const bLiveThree = mask.match(/[03]222[03]/g);  // 活三
   if (bLiveThree) {
     if (bLiveThree.length > 1) { // 白双活三胜
       if (!mask.match(/[03]{2}111|[03]1[03]11|[03]11[03]1|1[03]11[03]|11[03]1[03]|111[03]{2}/)) {
-        return -WEIGHT_2;
+        return -WEIGHT_1;
       }
-      return -WEIGHT_3;
+      return -WEIGHT_2;
     }
-    return -WEIGHT_4;
+    return -WEIGHT_3;
   }
 
   const aLiveTwo = mask.match(/[03]11[03]/g) || [];
   const bLiveTwo = mask.match(/[03]22[03]/g) || [];
 
-  return (aLiveTwo.length - bLiveTwo.length) * WEIGHT_5;
+  return (aLiveTwo.length - bLiveTwo.length) * WEIGHT_4;
 }
 
 function extract(state) {

@@ -10,60 +10,49 @@ export default class Ai {
 
   async calc(deep, role = 1) {
     this.attempts = 0;
-    let res;
-    for (let i = 2; i <= deep; i += 2) {
-      res = await this.minimax(this.board, i, role);
-      if (res[0] === Infinity) {
-        console.log('[minimax attempts]>>>>', this.attempts);
-        return res;
-      } else if (res[0] === -Infinity) {
-        console.log('[minimax attempts]<<<<', this.attempts);
-      }
-    }
-
-    // const res = await this.minimax(this.board, deep, role);
+    const res = await this.minimax(this.board, deep, role);
     console.log('[minimax attempts]', this.attempts);
-    return res;
+    return [res[0], res[1][0]];
   }
 
   async minimax(state, deep, role = 1, alpha = -Infinity, beta = Infinity) {
     this.attempts += 1;
     const candidates = state.getCandidates();
     if (!candidates || deep <= 0) {
-      return [ validate(state), candidates[0] ];
+      return [ validate(state), [] ];
     }
 
-    let pos = candidates[0];
+    let steps = [candidates[0]];
     if (role) {
       for (let i = 0; i < candidates.length; i++) {
         const [x, y] = candidates[i];
         state.putA(x, y); // 黑棋
-        const [ point ] = await this.minimax(state, deep - 1, role ^ 1, alpha, beta);
+        const [ point, _steps ] = await this.minimax(state, deep - 1, role ^ 1, alpha, beta);
         state.remove();
         if (point > alpha) {
           alpha = point;
-          pos = [x, y];
+          steps = [ [x, y], ..._steps ];
         }
         if (alpha >= beta) {
-          return [ alpha, [x, y]];
+          return [ alpha, [[x, y], ..._steps]];
         }
       }
-      return [ alpha, pos ];
+      return [ alpha, steps ];
     }
 
     for (let i = 0; i < candidates.length; i++) {
       const [x, y] = candidates[i];
       state.putB(x, y); // 白棋
-      const [ point ] = await this.minimax(state, deep - 1, role ^ 1, alpha, beta);
+      const [ point, _steps ] = await this.minimax(state, deep - 1, role ^ 1, alpha, beta);
       state.remove(x, y);
       if (point < beta) {
         beta = point;
-        pos = [x, y];
+        steps = [ [x, y], ..._steps ];
       }
       if (alpha >= beta) {
-        return [ beta, [x, y]];
+        return [ beta, [[x, y], ..._steps]];
       }
     }
-    return [ beta, pos ];
+    return [ beta, steps ];
   }
 }

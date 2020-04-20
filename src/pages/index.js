@@ -36,7 +36,6 @@ export default function() {
     return res;
   };
   const ai = useMemo(() => new AI(new Board({n: 15}), enhance), []);
-  window.ai = ai;
 
   const aiPut = async () => {
     // table = [];

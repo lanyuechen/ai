@@ -80,7 +80,6 @@ export default class Board {
 
   /**
    * 胜负判定
-   * @return {boolean} true: 黑胜，false: 白胜
    */
   judge() {
     const val = validate(this);

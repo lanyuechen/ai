@@ -36,6 +36,7 @@ export default function() {
     return res;
   };
   const ai = useMemo(() => new AI(new Board({n: 15}), enhance), []);
+  window.ai = ai;
 
   const aiPut = async () => {
     // table = [];
@@ -106,7 +107,7 @@ export default function() {
 
   return (
     <div className={style.container} style={{transform: `scale(${scale})`}}>
-      <h2 className={style.title}>AI五子棋 v1.2</h2>
+      <h2 className={style.title}>AI五子棋 v1.3</h2>
       <BoardView
         width={480}
         data={board} 

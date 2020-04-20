@@ -1,95 +1,86 @@
-import Board from "./board";
-
-const LIVE_4        = 1000000;
-const LIVE_3        = 100000;
-const LIVE_2        = 1000;
-const SLEEP_4       = 100000;
-const SLEEP_3       = 1000;
-const SLEEP_2       = 10;
-
-const SEARCH_DIRECTIONS = [
-  (i, j, step) => [i, j + step],          // 向右搜索
-  (i, j, step) => [i + step, j],          // 向下搜索
-  (i, j, step) => [i + step, j + step],   // 向右下搜索
-  (i, j, step) => [i - step, j + step],   // 向右上搜索
-];
+const WEIGHT_1 = 1000000;
+const WEIGHT_2 = 100000;
+const WEIGHT_3 = 10000;
+const WEIGHT_4 = 1000;
+const WEIGHT_5 = 100;
 
 export default function(state) {
+  const mask = extract(state);
+
+  if (mask.match(/11111/)) { // 黑棋五子(默认情况下，role = White的时候相反)
+    return Infinity;
+  }
+
+  if (mask.match(/22222/)) { // 白棋五子
+    return -Infinity; 
+  }
+
+  if (mask.match(/[03]1111|1[03]111|11[03]11|111[03]1|1111[03]/)) {  // 黑棋四子胜
+    return WEIGHT_1;
+  }
+
+  if (mask.match(/[03]2222[03]/)) { // 白棋活四胜
+    return -WEIGHT_1;
+  }
+
+  if (mask.match(/[03]2222|2[03]222|22[03]22|222[03]2|2222[03]/)) {  // 白棋四子
+    return -WEIGHT_2;
+  }
+
+  const aLiveThree = mask.match(/[03]111[03]/g); // 活三
+  if (aLiveThree) { // 黑活三胜
+    return WEIGHT_3;
+  }
+
+  const bLiveThree = mask.match(/[03]222[03]/g);  // 活三
+  if (bLiveThree) {
+    if (bLiveThree.length > 1) { // 白双活三胜
+      if (!mask.match(/[03]{2}111|[03]1[03]11|[03]11[03]1|1[03]11[03]|11[03]1[03]|111[03]{2}/)) {
+        return -WEIGHT_2;
+      }
+      return -WEIGHT_3;
+    }
+    return -WEIGHT_4;
+  }
+
+  const aLiveTwo = mask.match(/[03]11[03]/g) || [];
+  const bLiveTwo = mask.match(/[03]22[03]/g) || [];
+
+  return (aLiveTwo.length - bLiveTwo.length) * WEIGHT_5;
+}
+
+function extract(state) {
   const board = state.board;
-  let point = 0;
+
+  const h = [];
+  const v = [];
+  const vt = [];
+  const vb = [];
 
   for (let i = 0; i < board.length; i++) {
+    h.push('x');
+    v.push('x');
+    vt.push('x');
+    vb.push('x');
     for (let j = 0; j < board[i].length; j++) {
-      if (board[i][j] === Board.BLACK || board[i][j] === Board.WHITE) {  // 搜索
-        point += ratingSearch(state, i, j);
+      h.push(board[i][j]);
+      v.push(board[j][i]);
+    }
+    for (let j = 0; j <= i; j++) {
+      vt.push(board[i - j][j]);
+    }
+    for (let j = 0; j < board[i].length - i; j++) {
+      vb.push(board[j][i + j]);
+    }
+    if (i > 0) {
+      vt.push('x');
+      vb.push('x');
+      for (let j = 0; j < board[i].length - i; j++) {
+        vt.push(board[board[i].length - j - 1][j + i]);
+        vb.push(board[i + j][j]);
       }
     }
   }
 
-  return point;
-}
-
-function ratingSearch(state, i, j) {
-  let point = 0;
-  const sign = state.board[i][j] === Board.BLACK ? 1 : -1;
-  for (let fn of SEARCH_DIRECTIONS) {
-    point += search(state, i, j, fn);
-    if (!Number.isFinite(point)) {
-      return Infinity * sign;
-    }
-  }
-
-  return point * sign;
-}
-
-function search(state, i, j, step) {
-  const board = state.board;
-  const role = board[i][j];
-  const [li, lj] = step(i, j, -1);  // 前置位置
-  if (board[li] && board[li][lj] === role) {
-    return 0;
-  }
-
-  let c = 0;
-  while(board[i] && board[i][j] === role) {
-    c++;
-    [i, j] = step(i, j, 1);
-  }
-  if (c >= 5) {
-    return Infinity;
-  }
-  const s = state.canPut(li, lj);
-  const e = state.canPut(i, j);
-  if (s && e) {
-    return ratingLive(c);
-  } else if (s || e) {
-    return ratingSleep(c);
-  }
-  return 0;
-}
-
-// 活棋评分，两侧都可以落子
-function ratingLive(r) {
-  if (r === 4) {
-    return LIVE_4;
-  } else if (r === 3) {
-    return LIVE_3;
-  } else if (r === 2) {
-    return LIVE_2;
-  } else {
-    return 0;
-  }
-}
-
-// 眠棋评分，单侧可以落子
-function ratingSleep(r) {
-  if (r === 4) {
-    return SLEEP_4;
-  } else if (r === 3) {
-    return SLEEP_3;
-  } else if (r === 2) {
-    return SLEEP_2;
-  } else {
-    return 0;
-  }
+  return h.join('') + v.join('') + vt.join('') + vb.join('');
 }

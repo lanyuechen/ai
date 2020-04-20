@@ -10,7 +10,18 @@ export default class Ai {
 
   async calc(deep, role = 1) {
     this.attempts = 0;
-    const res = await this.minimax(this.board, deep, role);
+    let res;
+    for (let i = 2; i <= deep; i += 2) {
+      res = await this.minimax(this.board, i, role);
+      if (res[0] === Infinity) {
+        console.log('[minimax attempts]>>>>', this.attempts);
+        return res;
+      } else if (res[0] === -Infinity) {
+        console.log('[minimax attempts]<<<<', this.attempts);
+      }
+    }
+
+    // const res = await this.minimax(this.board, deep, role);
     console.log('[minimax attempts]', this.attempts);
     return res;
   }
